@@ -7,3 +7,4 @@
 
 # These are compiled artifacts
 /build
+/bin/
