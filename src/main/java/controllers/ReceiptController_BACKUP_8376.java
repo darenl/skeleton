@@ -24,6 +24,11 @@ public class ReceiptController {
     }
 
     @POST
+<<<<<<< HEAD
+    public int createReceipt(@Valid CreateReceiptRequest receipt) {
+        //return 99;
+    	return receipts.insert(receipt.merchantName, receipt.value);
+=======
     public int createReceipt(@Valid @NotNull CreateReceiptRequest receipt) {
         return receipts.insert(receipt.merchant, receipt.amount);
     }
@@ -32,5 +37,6 @@ public class ReceiptController {
     public List<ReceiptResponse> getReceipts() {
         List<ReceiptsRecord> receiptRecords = receipts.getAllReceipts();
         return receiptRecords.stream().map(ReceiptResponse::new).collect(toList());
+>>>>>>> 532f76ac85eb936f421a6a88d355447eab4f2d71
     }
 }
