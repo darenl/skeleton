@@ -22,6 +22,7 @@ public class ReceiptController {
 
     @POST
     public int createReceipt(@Valid CreateReceiptRequest receipt) {
-        return receipts.insert(receipt.merchantName, receipt.value);
+        //return 99;
+    	return receipts.insert(receipt.merchantName, receipt.value);
     }
 }

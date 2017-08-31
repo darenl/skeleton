@@ -7,8 +7,4 @@
 
 # These are compiled artifacts
 /build
-
-# This is where intellij builds the project
-/out
->>>>>>> 90c1ea03a173bbc80c3ee878a64b090de4fd80b0
 /bin/
