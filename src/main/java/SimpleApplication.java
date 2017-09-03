@@ -21,7 +21,7 @@ public class SimpleApplication extends Application<Configuration> {
 
     public static org.jooq.Configuration setupJooq() {
         // For now we are just going to use an H2 Database.  We'll upgrade to mysql later
-        JdbcConnectionPool cp = JdbcConnectionPool.create("jdbc:h2:/tmp/test;MODE=MySQL", "sa", "sa");
+        JdbcConnectionPool cp = JdbcConnectionPool.create("jdbc:h2:file:C:/tmp/test;MODE=MySQL", "sa", "sa");
 
         // This sets up jooq to talk to whatever database we are using.
         org.jooq.Configuration jooqConfig = new DefaultConfiguration();
@@ -35,7 +35,7 @@ public class SimpleApplication extends Application<Configuration> {
         // Create any global resources you need here
         org.jooq.Configuration jooqConfig = setupJooq();
         ReceiptDao receiptDao = new ReceiptDao(jooqConfig);
-
+        enableSessionSupport(env);
         // Register all Controllers below.  Don't forget 
         // you need class and method @Path annotations!
         env.jersey().register(new HelloWorldController());
