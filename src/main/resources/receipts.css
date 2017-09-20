@@ -1,0 +1,61 @@
+button{
+	border-radius: 5px;
+	border: 1px solid black;
+	font-size: 20px;
+	-webkit-transition-duration: 0.4s;
+	transition-duration: 0.4s;
+	display: inline-block;
+}
+
+button:hover{
+	color: white;
+}
+
+#receiptList{
+	border: 1px solid black;
+	display: inline-block;
+
+}
+
+.receipt{
+	display: table-row;
+}
+
+.receipt-heading{
+	display: table-header-group;
+}
+
+.timeh, .merchanth, .amounth, .tagsh, .time, .merchant, .amount, .tags{
+	display: table-cell;
+	padding: 15px;
+	border: 1px solid black;
+	font-size: 18px;
+	font-weight: bold;
+}
+
+#add-receipt-form{
+	background-color: orange;
+	width: 20em;
+	border: 1px solid black;
+	margin-bottom: 2em;
+	display: none;
+}
+
+#add-receipt{
+	background-color: orange;
+	width: 4em;
+
+}
+
+#merchant, #amount{
+	margin-left: 10px;
+}
+
+#cancel-receipt, #save-receipt{
+	background-color: #70F7EE;
+}
+
+.tag_input{
+	font-size: 10px;
+}
+

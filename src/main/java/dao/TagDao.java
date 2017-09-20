@@ -34,7 +34,8 @@ public class TagDao {
         }
 
         if(exists){
-            dsl.deleteFrom(TAGS).where(String.valueOf(TAGS.TAG.equals(tagName)), TAGS.RECEIPTID.equals(id)).execute();
+            System.out.println("Exists");
+            System.out.println(dsl.deleteFrom(TAGS).where(String.valueOf(TAGS.TAG.equals(tagName)), TAGS.RECEIPTID.equals(id)).execute());
         }
 
         else{
@@ -56,5 +57,10 @@ public class TagDao {
                 receipts.add(dsl.selectFrom(RECEIPTS).where("id=" + tr.getReceiptid()).fetchOne());
         }
         return receipts;
+    }
+
+    public List<TagsRecord> getTags(){
+        List<TagsRecord> tags = dsl.selectFrom(TAGS).fetch();
+        return tags;
     }
 }
