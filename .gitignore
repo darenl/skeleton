@@ -10,5 +10,11 @@
 
 # This is where intellij builds the project
 /out
+<<<<<<< HEAD
 >>>>>>> 90c1ea03a173bbc80c3ee878a64b090de4fd80b0
 /bin/
+=======
+
+# SECURITY ALERT! YOU SHOULD NOT COMMIT YOUR GCP SECURITY FILE!!!
+gc_api_file.json
+>>>>>>> ac1fa588d89bebd742f133ac0a45d9901b67410a

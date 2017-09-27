@@ -75,7 +75,7 @@ public class TagsRecord extends UpdatableRecordImpl<TagsRecord> implements Recor
 	}
 
 	/**
-	 * Setter for <code>public.tags.receiptid</code>.
+	 * Setter for <code>public.tags.tid</code>.
 	 */
 	public void setReceiptid(Integer value) {
 		setValue(3, value);

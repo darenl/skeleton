@@ -43,7 +43,6 @@ public class TagController {
 
     @GET
     public List<TagResponse> getTags(){
-        System.out.println("jfioeawjgioeajgioeajiogjeijigaesjigiodasiogesjekhjlhi;osdg hioagdsho uij;k");
         List<TagsRecord> tagRecords = tags.getTags();
         return tagRecords.stream().map(TagResponse::new).collect(toList());
     }
