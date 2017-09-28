@@ -46,7 +46,11 @@
 			display: none;
 		}
 
-		#add-receipt{
+        #post-image-form{
+            display: none;
+        }
+
+		#start-camera, #add-receipt{
 			background-color: orange;
 			width: 4em;
 
@@ -56,7 +60,7 @@
 			margin-left: 10px;
 		}
 
-		#cancel-receipt, #save-receipt{
+		#cancel-receipt, #save-receipt, #take-pic, #take-pic-cancel{
 			background-color: #70F7EE;
 		}
 
@@ -110,19 +114,20 @@
                 $('#add-receipt-form').toggle();
             });
 
+
             $('#save-receipt').click(function(){
                 $.ajax({
                     url: 'http://ec2-18-221-44-86.us-east-2.compute.amazonaws.com:8080/receipts',
                     type: 'POST',
-					contentType: 'application/json',
-					crossDomain: true,
-					headers: {
-                      'Access-Control-Allow-Origin': '*'
-					},
+                    contentType: 'application/json',
+                    crossDomain: true,
+                    headers: {
+                        'Access-Control-Allow-Origin': '*'
+                    },
                     data: JSON.stringify({
                         "merchant":  $('#merchant').val(),
-						"amount": $('#amount').val()
-					}),
+                        "amount": $('#amount').val()
+                    }),
                     success: function(result){
                         var receipt = $("<div class='receipt'></div>");
                         receipt.append($("<input type='hidden' class='id' value='" + counter + "'/>"));
@@ -137,6 +142,9 @@
                         tags.append($("<button class='add-tag' value='" + counter + "'>Add +</div>"));
                         receipt.append(tags);
                         $('#receiptList').append(receipt);
+                    },
+                    error: function(){
+                        console.log("joifejiagjeogjeijgioejigjieoagjoejgeoig");
                     }
                 });
             });
@@ -146,6 +154,79 @@
                 $('#amount').val("");
                 $('#add-receipt-form').hide();
             });
+
+            //Lines 117-137 are from Upstream Remote Repository
+            var imageCapture;
+            var track;
+            function attachMediaStream(mediaStream) {
+                $('video')[0].srcObject = mediaStream;
+                // Saving the track allows us to capture a photo
+                track = mediaStream.getVideoTracks()[0];
+                imageCapture = new ImageCapture(track);
+            }
+
+            $('#start-camera').click(function(){
+                $('#post-image-form').toggle();
+
+                navigator.mediaDevices.getUserMedia({video: {facingMode: {exact: "environment"}}})
+                .then(attachMediaStream)
+                .catch(function() {
+                    navigator.mediaDevices.getUserMedia({video: true})
+                        .then(attachMediaStream)
+                        .catch(function() {
+                            console.log('could not turn on');
+                        });
+                });
+            });
+			//Code from Remote Upstream Repository
+            $('#take-pic').click(function(){
+				// create a CANVAS element that is same size as the image
+                imageCapture.grabFrame()
+                    //.then( => {createImageBitmap(blob)})
+            		.then(img => {
+                    	const canvas = document.createElement('canvas');
+                		canvas.width = img.width;
+                		canvas.height = img.height;
+                		canvas.getContext('2d').drawImage(img, 0, 0);
+                		//$(this).append(canvas);
+                		const base64EncodedImageData = canvas.toDataURL('image/png').split(',')[1];
+                	$.ajax({
+                    	url: "/images",
+                    	type: "POST",
+                    	data: base64EncodedImageData,
+                    	contentType: "text/plain",
+                    	success: function() {
+                    	    console.log("succeeded");
+						}
+                	})
+                        .then(response => {
+                            var merch = response["merchantName"];
+                            var am = response["amount"];
+                            $('#add-receipt-form').show();
+                            $('#merchant').val(merch);
+                            $('#amount').val(am);
+                            //$('video').after(`<div>got response: <pre>${JSON.stringify(response)}</pre></div>`);
+                        })
+                        .always(() => console.log('request complete'));
+            	});
+			});
+
+            $('#take-pic-cancel').click(function(){
+                navigator.mediaDevices.getUserMedia({video: {facingMode: {exact: "environment"}}})
+                    .then(endVid)
+                    .catch(function() {
+                        navigator.mediaDevices.getUserMedia({video: true})
+                            .then(endVid)
+                            .catch(function() {
+                                console.log('could not turn off');
+                            });
+                    });
+               $('#post-image-form').hide();
+			});
+
+            function endVid(mediaStream){
+				track.stop();
+			}
 
             $(document).on('click', '.tag_toggle', function(){
                 var currentElement = $(this);
@@ -187,7 +268,16 @@
 </head>
 <body>
 	<h2>My Receipts</h2>
+    <button id="start-camera">@__@</button>
 	<button id="add-receipt">+</button><br><br>
+    <div id="post-image-form">
+    <br>
+		<button id="take-pic">Take a Pic</button>
+		<button id="take-pic-cancel">Cancel Pic</button>
+		<br>
+    <video autoplay></video><br>
+    <br>
+    </div>
 	<form name="receipt-form" id="add-receipt-form">
 		<br>
 		<input type="text" id="merchant" placeholder="merchant" required="true"><br><br>
