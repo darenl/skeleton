@@ -82,14 +82,14 @@
             var counter = 0;
             var allTags = [];
             $.ajax({
-				url: 'http://ec2-18-221-44-86.us-east-2.compute.amazonaws.com:8080/tags',
+				url: '/tags',//'http://ec2-18-221-44-86.us-east-2.compute.amazonaws.com:8080/tags',
 				async: false,
 				dataType: 'json',
 				success: function(resultTags){
 				    allTags = resultTags;
 				}
 			});
-            $.getJSON('http://ec2-18-221-44-86.us-east-2.compute.amazonaws.com:8080/receipts', function(receipts){
+            $.getJSON(/*'http://ec2-18-221-44-86.us-east-2.compute.amazonaws.com:8080*/"/receipts", function(receipts){
                 receipts.forEach(function(each){
                     var receipt = $("<div class='receipt'></div>");
                     counter++;
@@ -117,7 +117,7 @@
 
             $('#save-receipt').click(function(){
                 $.ajax({
-                    url: 'http://ec2-18-221-44-86.us-east-2.compute.amazonaws.com:8080/receipts',
+                    url: '/receipts',//'http://ec2-18-221-44-86.us-east-2.compute.amazonaws.com:8080/receipts',
                     type: 'POST',
                     contentType: 'application/json',
                     crossDomain: true,
@@ -129,13 +129,18 @@
                         "amount": $('#amount').val()
                     }),
                     success: function(result){
+                        var date = new Date();
+                        var hrs = date.getHours();
+                        var min = date.getMinutes();
+                        var sec = date.getSeconds();
+                        var time = hrs.toString() + ":" + min.toString() + ":" + sec.toString();
                         var receipt = $("<div class='receipt'></div>");
                         receipt.append($("<input type='hidden' class='id' value='" + counter + "'/>"));
                         counter++;
-                        receipt.append($("<div class='time'>" + result.created + "</div>"));
-                        receipt.append($("<div class='merchant'>" + result.merchantName + "</div>"));
-                        if(result.amount)
-                            receipt.append($("<div class='amount'>" + result.value + "</div>"));
+                        receipt.append($("<div class='time'>" + time + "</div>"));
+                        receipt.append($("<div class='merchant'>" + $('#merchant').val() + "</div>"));
+                        if($('#amount').val())
+                            receipt.append($("<div class='amount'>" + $('#amount').val() + "</div>"));
                         else
                             receipt.append($("<div class='amount'></div>"));
                         var tags = $("<div class='tags'></div>");
@@ -144,7 +149,7 @@
                         $('#receiptList').append(receipt);
                     },
                     error: function(){
-                        console.log("joifejiagjeogjeijgioejigjieoagjoejgeoig");
+                        console.log("Post Request Failed");
                     }
                 });
             });
@@ -231,7 +236,7 @@
             $(document).on('click', '.tag_toggle', function(){
                 var currentElement = $(this);
                 $.ajax({
-                    url: 'http://ec2-18-221-44-86.us-east-2.compute.amazonaws.com:8080/tags/' + $(this).text(),
+                    url: '/tags/' + $(this).text(),//'http://ec2-18-221-44-86.us-east-2.compute.amazonaws.com:8080/tags/' + $(this).text(),
                     type: 'PUT',
                     contentType: 'application/json',
                     data: currentElement.siblings('.add-tag').val(),
@@ -252,7 +257,7 @@
                 var currentElement = $(this);
                 if(e.keyCode == 13){
                     $.ajax({
-                        url: 'http://ec2-18-221-44-86.us-east-2.compute.amazonaws.com:8080/tags/' + $(this).val(),
+                        url: '/tags/' + $(this).val(),//'http://ec2-18-221-44-86.us-east-2.compute.amazonaws.com:8080/tags/' + $(this).val(),
                         type: 'PUT',
 						data: $(this).next().val(),
                         contentType: 'application/json',
@@ -278,13 +283,13 @@
     <video autoplay></video><br>
     <br>
     </div>
-	<form name="receipt-form" id="add-receipt-form">
+	<div name="receipt-form" id="add-receipt-form">
 		<br>
 		<input type="text" id="merchant" placeholder="merchant" required="true"><br><br>
 		<input type="text" id="amount" placeholder="amount"><br><br>
 		<button id="cancel-receipt">Cancel</button>
 		<button id="save-receipt">Save</button>
-	</form>
+	</div>
 	<div id="receiptList">
 		<div class="receipt-heading">
 			<div class="timeh">Time</div>

@@ -2,6 +2,7 @@ package controllers;
 
 import api.CreateReceiptRequest;
 import api.ReceiptResponse;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import dao.ReceiptDao;
 import generated.tables.records.ReceiptsRecord;
 
@@ -25,7 +26,7 @@ public class ReceiptController {
     }
 
     @POST
-    public ReceiptsRecord createReceipt(@Valid @NotNull CreateReceiptRequest receipt) {
+    public ReceiptResponse createReceipt(@Valid @NotNull CreateReceiptRequest receipt) {
     	return receipts.insert(receipt.merchant, receipt.amount);
     }
 

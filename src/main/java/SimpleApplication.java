@@ -53,6 +53,6 @@ public class SimpleApplication extends Application<Configuration> {
         env.jersey().register(new StaticHtmlController());
         env.jersey().register(new ReceiptController(receiptDao));
         env.jersey().register(new NetIDController());
-        //env.jersey().register(new ReceiptImageController());
+        env.jersey().register(new ReceiptImageController());
     }
 }
