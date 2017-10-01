@@ -9,6 +9,7 @@ import java.util.Collections;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.json.JSONObject;
 
 import static java.lang.System.out;
 
@@ -63,6 +64,28 @@ public class ReceiptImageController {
                 amount = new BigDecimal(0.0);
             }
             out.println("==========================================================================");
+            String boundingPoly = res.getTextAnnotationsList().get(0).getBoundingPoly().toString();
+            String[] bp = boundingPoly.split("vertices ");
+            out.println("==========================================================================");
+            String cornerFirst = bp[1];
+            String cornerLast = bp[3];
+
+            String[] corner1 = cornerFirst.split("\n");
+            String[] corner3 = cornerLast.split("\n");
+            Integer xVal1 = Integer.parseInt(corner1[1].split(": ")[1]);
+            Integer yVal1 = Integer.parseInt(corner1[2].split(": ")[1]);
+            Integer xVal2 = Integer.parseInt(corner3[1].split(": ")[1]);
+            Integer yVal2 = Integer.parseInt(corner3[2].split(": ")[1]);
+
+//            JSONObject json = new JSONObject();
+//            json.put("x1", xVal1);
+//            json.put("y1", yVal1);
+//            json.put("x2", xVal2);
+//            json.put("y2", yVal2);
+//            json.put("merchantName", merchantName);
+//            json.put("amount", amount);
+//            out.println(json);
+
 //            for (EntityAnnotation annotation : res.getTextAnnotationsList()) {
 //                out.printf("Position : %s\n", annotation.getBoundingPoly());
 //                out.printf("Text: %s\n", annotation.getDescription());
@@ -70,7 +93,7 @@ public class ReceiptImageController {
 //            }
 
             //TextAnnotation fullTextAnnotation = res.getFullTextAnnotation();
-            return new ReceiptSuggestionResponse(merchantName, amount);
+            return new ReceiptSuggestionResponse(merchantName, amount, xVal1, xVal2, yVal1, yVal2);
         }
     }
 }

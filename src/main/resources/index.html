@@ -75,6 +75,8 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 	<script>
         $(document).ready(function(){
+            var pictureTaken = false;
+            var cv, image, sx, sy, swidth, sheight;
             var deletedTags = JSON.parse(localStorage.getItem("deletedTags"));
             if(!deletedTags)
                 deletedTags = [];
@@ -147,6 +149,12 @@
                         tags.append($("<button class='add-tag' value='" + counter + "'>Add +</div>"));
                         receipt.append(tags);
                         $('#receiptList').append(receipt);
+
+                        if(pictureTaken) {
+                            console.log("this area hs beeen reached");
+                            $("#thumbnails").append(cv);
+                            pictureTaken = false;
+                        }
                     },
                     error: function(){
                         console.log("Post Request Failed");
@@ -189,11 +197,11 @@
                 imageCapture.grabFrame()
                     //.then( => {createImageBitmap(blob)})
             		.then(img => {
-                    	const canvas = document.createElement('canvas');
+                    	var canvas = document.createElement('canvas');
                 		canvas.width = img.width;
                 		canvas.height = img.height;
-                		canvas.getContext('2d').drawImage(img, 0, 0);
-                		//$(this).append(canvas);
+                		image = img;
+						canvas.getContext('2d').drawImage(img, 0, 0);
                 		const base64EncodedImageData = canvas.toDataURL('image/png').split(',')[1];
                 	$.ajax({
                     	url: "/images",
@@ -207,10 +215,23 @@
                         .then(response => {
                             var merch = response["merchantName"];
                             var am = response["amount"];
+                            if(am === 0)
+                                window.alert("Receipt image did not capture the total properly, Try again.");
                             $('#add-receipt-form').show();
                             $('#merchant').val(merch);
                             $('#amount').val(am);
-                            //$('video').after(`<div>got response: <pre>${JSON.stringify(response)}</pre></div>`);
+                            pictureTaken = true;
+                            if(am !== 0)
+	                            $('#post-image-form').hide();
+
+                            sx = response["xVal1"];
+                            sy = response["yVal1"];
+                            swidth = response["xVal2"] - sx;
+                            sheight = response["yVal2"] - sy;
+							cv = document.createElement("canvas");
+							cv.width = img.width;
+							cv.height = img.height;
+                            cv.getContext('2d').drawImage(image, sx, sy, swidth, sheight, 0, 0, swidth, sheight);
                         })
                         .always(() => console.log('request complete'));
             	});
@@ -298,5 +319,6 @@
 			<div class="tagsh">Tags</div>
 		</div>
 	</div>
+	<div id="thumbnails"></div>
 </body>
 </html>
