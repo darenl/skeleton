@@ -15,7 +15,7 @@ ADD appconfig.yml /skeleton/
 
 # Add your GCP Service Account API File to the Docker Image
 ADD vision_api.json /skeleton/vision_api.json
-ENV GOOGLE_APPLICATION_CREDENTIALS=./skeleton/vision_api.json
+ENV GOOGLE_APPLICATION_CREDENTIALS=/skeleton/vision_api.json
 
 # Convenience if we ever want to log into the image and snoop around
 WORKDIR /skeleton
